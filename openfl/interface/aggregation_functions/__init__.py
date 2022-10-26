@@ -11,6 +11,7 @@ from .geometric_median import GeometricMedian
 from .median import Median
 from .weighted_average import WeightedAverage
 from .yogi_adaptive_aggregation import YogiAdaptiveAggregation
+from .trimmed_mean import TrimmedMean
 
 __all__ = ['Median',
            'WeightedAverage',
@@ -19,4 +20,5 @@ __all__ = ['Median',
            'AdamAdaptiveAggregation',
            'YogiAdaptiveAggregation',
            'AggregationFunction',
-           'FedCurvWeightedAverage']
+           'FedCurvWeightedAverage',
+           'TrimmedMean']
