@@ -4,14 +4,21 @@
 """Trimmed mean module."""
 
 import numpy as np
+import torch
 
-from .core import AggregationFunction
-
+from openfl.interface.aggregation_functions.core import AggregationFunction
+from openfl.utilities import LocalTensor
 
 class TrimmedMean(AggregationFunction):
     """Trimmed mean aggregation."""
 
-    def call(self, local_tensors, *_) -> np.ndarray:
+    def __init__(self, k):
+        """
+            Args:
+                k(int): Number of outer examples trimmed before aggregation
+        """
+        self.k = k
+    def call(self, local_tensors,  *_) -> np.ndarray:
         """Aggregate tensors.
 
         Args:
@@ -35,10 +42,20 @@ class TrimmedMean(AggregationFunction):
             tensor_name: name of the tensor
             fl_round: round number
             tags: tuple of tags for this tensor
+            k: number of outer examples removed before aggregation
         Returns:
             np.ndarray: aggregated tensor
         """
-        tensors = np.array([x.tensor for x in local_tensors])
+        tensors = torch.tensor([x.tensor for x in local_tensors])
+        tensors2, weights = zip(*[(x.tensor, x.weight) for x in local_tensors])
+        #n = len(local_tensors)
+        #x = np.mean(np.sort(tensors, axis=-1)[self.k:n-self.k], axis=0)
+        #return x
+
         n = len(local_tensors)
-        k = 2
-        return np.mean(np.sort(tensors, axis=-1)[k:n-k], axis=-1)
+        k = self.k
+        # trim k biggest and smallest values of gradients
+        sorted, _ = torch.sort(tensors, dim=-1)
+        reduced = sorted[k:(n - k)]
+        x = torch.mean(reduced, dim=0)
+        return x

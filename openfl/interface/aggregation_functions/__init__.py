@@ -12,6 +12,7 @@ from .median import Median
 from .weighted_average import WeightedAverage
 from .yogi_adaptive_aggregation import YogiAdaptiveAggregation
 from .trimmed_mean import TrimmedMean
+from .flame import Flame
 
 __all__ = ['Median',
            'WeightedAverage',
@@ -21,4 +22,5 @@ __all__ = ['Median',
            'YogiAdaptiveAggregation',
            'AggregationFunction',
            'FedCurvWeightedAverage',
-           'TrimmedMean']
+           'TrimmedMean',
+           'Flame']

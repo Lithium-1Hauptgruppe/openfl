@@ -4,6 +4,6 @@ settings :
     - name       : train_and_validate
       percentage : 1.0
       tasks      :
-        - aggregated_model_validation
+        #- aggregated_model_validation
         - train
-        - locally_tuned_model_validation
+        #- locally_tuned_model_validation
