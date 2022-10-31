@@ -9,6 +9,8 @@ import torchvision
 import torchvision.transforms as transforms
 import openfl.interface.aggregation_functions as agg
 
+import openfl.interface.attackers as att
+
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -81,14 +83,15 @@ def cross_entropy(output, target):
 
 fl_model = FederatedModel(build_model=Net, optimizer=optimizer, loss_fn=cross_entropy, data_loader=fl_data)
 
-
+attacker = att.MinMaxAttacker(f=2)
 
 fl_data = FederatedDataSet(train_images, train_labels, valid_images, valid_labels, batch_size=32, num_classes=classes)
 
 experiment_collaborators = {col_name:col_model for col_name, col_model in zip(collaborator_list, fl_model.setup(len(collaborator_list)))}
 
+
 final_fl_model = fx.run_experiment(experiment_collaborators, {
-    'tasks.train.aggregation_type': agg.Flame(delta=0.001, epsilon=1000),
+    'tasks.train.aggregation_type': agg.Flame(delta=0.001, epsilon=1000, attacker=attacker),
 })
 
 #final_fl_model = fx.run_experiment(experiment_collaborators)

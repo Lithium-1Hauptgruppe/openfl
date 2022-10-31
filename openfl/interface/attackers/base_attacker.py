@@ -15,20 +15,16 @@ from openfl.utilities import SingletonABCMeta
 
 
 class BaseAttacker(metaclass=SingletonABCMeta):
-    def __init__(self):
+    def __init__(self, f):
         """Initialize common AttackerFunction params
 
            Default: Read only access to TensorDB
         """
-        self._privileged = False
+        self.f = f
 
     @abstractmethod
     def call(self,
-             local_tensors: List[LocalTensor],
-             db_iterator: Iterator[pd.Series],
-             tensor_name: str,
-             fl_round: int,
-             tags: Tuple[str]) -> np.ndarray:
+             local_tensors: List[LocalTensor]) -> np.ndarray:
         """Attack tensors and write some to the malicious output.
 
         Args:
@@ -57,10 +53,6 @@ class BaseAttacker(metaclass=SingletonABCMeta):
         """
         raise NotImplementedError
 
-    def __call__(self, local_tensors,
-                 db_iterator,
-                 tensor_name,
-                 fl_round,
-                 tags):
+    def __call__(self, local_tensors):
         """Use magic function for ease."""
-        return self.call(local_tensors, db_iterator, tensor_name, fl_round, tags)
+        return self.call(local_tensors)

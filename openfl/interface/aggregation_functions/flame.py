@@ -14,13 +14,14 @@ from openfl.utilities import LocalTensor
 class Flame(AggregationFunction):
     """Trimmed mean aggregation."""
 
-    def __init__(self, epsilon=1000, delta=0.001):
+    def __init__(self, epsilon=1000, delta=0.001, attacker=None):
         """
             Args:
                 k(int): Number of outer examples trimmed before aggregation
         """
         self.epsilon = epsilon
         self.delta = delta
+        self.attacker = attacker
 
     def call(self, local_tensors,  *_) -> np.ndarray:
         """Aggregate tensors.
@@ -62,9 +63,13 @@ class Flame(AggregationFunction):
         epsilon: parameter for differential privacy
         delta: parameter for differential privacy
         """
+
         tensors = torch.tensor([x.tensor for x in local_tensors])
         tensors = [torch.reshape(ten, (-1,)) for ten in tensors]
         n = len(local_tensors)
+
+        tensors = self.attacker(tensors)
+
         delta = self.delta
         epsilon = self.epsilon
 

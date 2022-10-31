@@ -9,7 +9,7 @@ from .base_attacker import BaseAttacker
 class ZerosAttacker(BaseAttacker):
     """Zeros attack module."""
 
-    def call(self, local_tensors, f, *_) -> np.ndarray:
+    def call(self, local_tensors, *_) -> np.ndarray:
         """Attack tensors and change output to zeros.
 
         Args:
